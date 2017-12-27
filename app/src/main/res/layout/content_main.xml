@@ -10,11 +10,5 @@
     tools:showIn="@layout/app_bar_main"
     tools:context="com.s4u.streamingplayer.MainActivity">
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="com.s4u.streamingplayer.PlayerFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="214dp" />
+
 </android.support.constraint.ConstraintLayout>

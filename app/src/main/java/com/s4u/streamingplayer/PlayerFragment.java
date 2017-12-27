@@ -27,6 +27,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -89,6 +90,47 @@ public class PlayerFragment extends Fragment implements PlaybackControlView.Visi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        initPlayer2();
+    }
+
+    public void initPlayer2()
+    {
+        // 1. Create a default TrackSelector
+        Handler mainHandler = new Handler();
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory videoTrackSelectionFactory =
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector =
+                new DefaultTrackSelector(videoTrackSelectionFactory);
+
+        // 2. Create the player
+        SimpleExoPlayer player =
+                ExoPlayerFactory.newSimpleInstance(activity, trackSelector);
+
+
+        // Measures bandwidth during playback. Can be null if not required.
+//        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        // Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(activity,
+                Util.getUserAgent(activity, "TheApplication"), bandwidthMeter);
+        // Produces Extractor instances for parsing the media data.
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+        Uri mp4VideoUri =Uri.parse("/sdcard/Download/test.mp4"); //Radnom 540p indian channel
+
+        // This is the MediaSource representing the media to be played.
+        MediaSource videoSource = new ExtractorMediaSource(mp4VideoUri,
+                dataSourceFactory, extractorsFactory, null, null);
+        // Prepare the player with the source.
+        player.prepare(videoSource);
+
+        // Bind the player to the view.
+        simpleExoPlayerView.setPlayer(player);
+
+    }
+
+    public void initPlayer1()
+    {
         mainHandler = new Handler();
         simpleExoPlayerView.setControllerVisibilityListener(this);
         simpleExoPlayerView.requestFocus();
