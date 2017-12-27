@@ -1,0 +1,1 @@
+include ':app', ':library-core', ':library-dash', ':library-hls', ':library-smoothstreaming', ':library-ui', ':all'
